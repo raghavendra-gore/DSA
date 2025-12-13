@@ -1,50 +1,54 @@
 public class Solution {
-    /**
-     * Counts the number of "good" subarrays in a given integer array A based on specific criteria.
-     *
-     * A subarray is "good" if:
-     * 1. Its length is even, AND its sum is less than B.
-     * 2. Its length is odd, AND its sum is greater than B.
-     *
-     * @param A The input integer array.
-     * @param B The integer threshold for sum comparison.
-     * @return The total count of good subarrays.
-     */
+    // Method to count subarrays based on size parity and sum conditions
     public int solve(int[] A, int B) {
-        int n = A.length;
-        int goodSubarrayCount = 0;
 
-        // Step 1: Precompute prefix sums to allow O(1) sum lookups for any subarray
-        long[] prefixSum = new long[n + 1];
-        for (int i = 0; i < n; i++) {
-            // prefixSum[k] stores the sum of elements A[0]...A[k-1]
-            prefixSum[i + 1] = prefixSum[i] + A[i];
+        // Store the length of the input array
+        int n = A.length;
+
+        // Prefix sum array to store cumulative sums of the array
+        int pref[] = new int[n];
+
+        // Initialize the first prefix sum with the first element
+        pref[0] = A[0];
+
+        // Variable to store the count of valid subarrays
+        int ans = 0;
+
+        // Build the prefix sum array
+        for(int i = 1 ; i < n ; i++){
+            pref[i] = pref[i - 1] + A[i];
         }
 
-        // Step 2 & 3: Iterate through all possible subarrays using nested loops (O(N^2) time complexity)
-        for (int start = 0; start < n; start++) {
-            for (int end = start; end < n; end++) {
+        // Iterate over all possible starting indices of subarrays
+        for(int i = 0 ; i < n ; i++){
 
-                // Calculate the length of the current subarray (A[start]...A[end])
-                int currentLength = end - start + 1;
+            // Iterate over all possible ending indices of subarrays
+            for (int j = i ; j < n ; j++){
 
-                // Calculate the sum of the current subarray in O(1) time using prefix sums
-                // The sum is prefixSum[end + 1] - prefixSum[start]
-                // Use long for sum calculations to avoid potential integer overflow if sums get large
-                long currentSum = prefixSum[end + 1] - prefixSum[start];
+                // Calculate the size (length) of the current subarray
+                int sz = j - i + 1;
 
-                // Check Criterion 1: Even length and sum < B
-                if (currentLength % 2 == 0 && currentSum < B) {
-                    goodSubarrayCount++;
+                // Variable to store the sum of the current subarray
+                int sum;
+
+                // If subarray starts from index 0, take prefix sum directly
+                if(i == 0){
+                    sum = pref[j];
                 }
-                // Check Criterion 2: Odd length and sum > B
-                else if (currentLength % 2 != 0 && currentSum > B) {
-                    goodSubarrayCount++;
+                // Otherwise, subtract prefix sum before index i
+                else{
+                    sum = pref[j] - pref[i - 1];
                 }
+
+                // If subarray size is even and sum is less than B, count it
+                if(sz % 2 == 0 && sum < B) ans++;
+
+                // If subarray size is odd and sum is greater than B, count it
+                if(sz % 2 == 1 && sum > B) ans++;
             }
         }
 
-        // Return the final count of subarrays that met the criteria
-        return goodSubarrayCount;
+        // Return the total count of valid subarrays
+        return ans;
     }
 }

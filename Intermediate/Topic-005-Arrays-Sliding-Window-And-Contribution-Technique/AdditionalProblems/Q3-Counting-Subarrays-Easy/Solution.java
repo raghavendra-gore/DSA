@@ -1,42 +1,43 @@
 public class Solution {
-    /**
-     * Finds the number of contiguous subarrays in A with a sum strictly less than B.
-     * Uses a two-pointer/sliding window approach.
-     *
-     * @param A The input array of non-negative integers.
-     * @param B The non-negative threshold value.
-     * @return The total count of valid subarrays.
-     */
+    // This method counts the number of subarrays whose sum is less than B
     public int solve(int[] A, int B) {
-        int n = A.length;
-        if (B <= 0) {
-            // Since all A[i] are non-negative, if B is 0 or less,
-            // no subarray sum can be strictly less than B.
-            return 0;
-        }
 
-        int count = 0; // Total count of subarrays satisfying the condition (sum < B)
-        int currentSum = 0; // The running sum within the sliding window [left, right]
-        int left = 0; // The left pointer of the sliding window
+        // Length of the input array
+        int n  = A.length;
 
-        // The right pointer expands the window to the right
-        for (int right = 0; right < n; right++) {
-            currentSum += A[right];
+        // Prefix sum array where pref[i] stores sum of elements from index 0 to i
+        int pref[] = new int[n];
 
-            // If the current window sum becomes >= B, we must shrink the window
-            // from the left side to restore the sum < B property.
-            while (currentSum >= B) {
-                currentSum -= A[left]; // Remove the element at the left pointer from the sum
-                left++; // Move the left pointer one step right
+        // Initialize the first prefix sum with the first element
+        pref[0] = A[0];
+
+        // Variable to store the final count of valid subarrays
+        int ans = 0;
+
+        // Build the prefix sum array
+        for(int i = 1; i < n; i++)
+            pref[i] = pref[i - 1] + A[i];
+
+        // Iterate over all possible starting indices of subarrays
+        for(int i = 0; i < n; i++) {
+
+            // Iterate over all possible ending indices of subarrays
+            for (int j = i; j < n; j++) {
+
+                // Calculate sum of subarray from i to j using prefix sums
+                int sum = pref[j];
+
+                // If subarray does not start at index 0, subtract prefix sum before i
+                if(i > 0) {
+                    sum -= pref[i - 1];
+                }
+
+                // If the subarray sum is less than B, increment the count
+                if(sum < B) ans++;
             }
-
-            // At this stage, the window [left...right] has a sum < B.
-            // Because all elements are non-negative, any subarray ending at 'right'
-            // and starting from an index between 'left' and 'right' also has sum < B.
-            // The number of such valid subarrays is the current window size: (right - left + 1).
-            count += (right - left + 1);
         }
 
-        return count;
+        // Return the total number of valid subarrays
+        return ans;
     }
 }
