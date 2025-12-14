@@ -8,7 +8,7 @@ Your task is to calculate the total amount of water that can be trapped in these
 
 For example, given the array `A = [5, 4, 1, 4, 3, 2, 7]`, the total amount of rain water trapped is 11.
 
-![Rain Water Trapped Visualization](https://github.com/raghavendra-gore/DSA/tree/main/images/rain_1.png)
+![Rain-Water-Trapped](../../../../../images/rain_1.png)
 *(Note: Replace the image link with an actual visualization if you have one hosted.)*
 
 ## Problem Constraints
@@ -47,6 +47,6 @@ Return an Integer, denoting the total amount of water that can be trapped in the
 
 **Explanation 2:**
 
-![Rain Water Trapped]()
+![Rain Water Trapped](../../../../../images/rain_2.png)
 
 No water is trapped as the bars only increase in height or are monotonic.
